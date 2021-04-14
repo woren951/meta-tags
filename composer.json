@@ -1,0 +1,26 @@
+{
+    "name": "woren951/meta-tags",
+    "description": "HTML meta tags generation by PHP",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Woren951\\MetaTags\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Oleh Kotyay",
+            "email": "woren951@gmail.com"
+        }
+    ],
+    "require": {
+        "php": "^7.3|^8.0"
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Woren951\\MetaTags\\Providers\\MetaTagsServiceProvider"
+            ]
+        }
+    }
+}
