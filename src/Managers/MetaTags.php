@@ -254,7 +254,53 @@ class MetaTags
             $meta .= $this->createTag($value['tag'], $attributes, $value['content'] ?? null) . "\n";
         }
 
+        foreach ($this->jsonLd as $schema) {
+            $json = json_encode($schema, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT);
+
+            $meta .= "<script type=\"application/ld+json\">\n{$json}\n</script>";
+        }
+
         return $meta;
+    }
+
+    /**
+     * @param string $key
+     * @param mixed $default
+     * @return mixed
+     */
+    public function getMeta(string $key, $default = null)
+    {
+        $tag = $this->meta[$key]['tag'] ?? null;
+
+        if ($tag === 'title') {
+            return $this->meta[$key]['content'] ?? $default;
+        } elseif ($tag === 'meta') {
+            return $this->meta[$key]['attributes']['content'] ?? $default;
+        } elseif ($tag === 'link') {
+            return $this->meta[$key]['attributes']['href'] ?? $default;
+        }
+
+        return $default;
+    }
+
+    /**
+     * @param string $key
+     * @param mixed $default
+     * @return mixed
+     */
+    public function getOg(string $key, $default = null)
+    {
+        return $this->og[$key]['attributes']['content'] ?? $default;
+    }
+
+    /**
+     * @param string $key
+     * @param mixed $default
+     * @return mixed
+     */
+    public function getTwitter(string $key, $default = null)
+    {
+        return $this->twitter[$key]['attributes']['content'] ?? $default;
     }
 
     /**
