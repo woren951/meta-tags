@@ -12,6 +12,11 @@ class MetaTags
     /**
      * @var array
      */
+    protected $links = [];
+
+    /**
+     * @var array
+     */
     protected $og = [];
 
     /**
@@ -92,9 +97,7 @@ class MetaTags
      */
     public function canonical(string $value): self
     {
-        $this->meta('canonical', 'link', [
-            'href' => $value,
-        ]);
+        $this->addLink('canonical', $value, []);
 
         $this->og('url', $value);
 
@@ -165,6 +168,23 @@ class MetaTags
     }
 
     /**
+     * @param string $rel
+     * @param string $href
+     * @param array $attributes
+     * @return $this
+     */
+    public function addLink(string $rel, string $href, array $attributes): self
+    {
+        $this->links[] = [
+            'rel' => $rel,
+            'href' => $href,
+            'attributes' => $attributes,
+        ];
+
+        return $this;
+    }
+
+    /**
      * @param string $key
      * @param string $content
      * @return $this
@@ -221,19 +241,24 @@ class MetaTags
         foreach ($this->meta as $key => $value) {
             $attributes = [];
 
-            if ($value['tag'] === 'meta') {
-                $attributes = array_merge(
-                    [ 'name' => $key ],
-                    $value['attributes'] ?? []
-                );
-            } elseif ($value['tag'] === 'link') {
-                $attributes = array_merge(
-                    [ 'rel' => $key ],
-                    $value['attributes'] ?? []
-                );
-            }
+            $attributes = array_merge(
+                [ 'name' => $key ],
+                $value['attributes'] ?? []
+            );
 
             $meta .= $this->createTag($value['tag'], $attributes, $value['content'] ?? null) . "\n";
+        }
+
+        foreach ($this->links as $key => $value) {
+            $attributes = array_merge(
+                [
+                    'rel' => $value['rel'],
+                    'href' => $value['href'],
+                ],
+                $value['attributes'] ?? []
+            );
+
+            $meta .= $this->createTag('link', $attributes, null) . "\n";
         }
 
         foreach ($this->og as $key => $value) {
