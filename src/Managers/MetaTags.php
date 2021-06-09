@@ -97,7 +97,7 @@ class MetaTags
      */
     public function canonical(string $value): self
     {
-        $this->addLink('canonical', $value, []);
+        $this->replaceLink('canonical', $value, []);
 
         $this->og('url', $value);
 
@@ -175,6 +175,27 @@ class MetaTags
      */
     public function addLink(string $rel, string $href, array $attributes): self
     {
+        $this->links[] = [
+            'rel' => $rel,
+            'href' => $href,
+            'attributes' => $attributes,
+        ];
+
+        return $this;
+    }
+
+    /**
+     * @param string $rel
+     * @param string $href
+     * @param array $attributes
+     * @return $this
+     */
+    public function replaceLink(string $rel, string $href, array $attributes): self
+    {
+        if ($index = array_search($rel, $this->links)) {
+            unset($this->links[$index]);
+        }
+
         $this->links[] = [
             'rel' => $rel,
             'href' => $href,
