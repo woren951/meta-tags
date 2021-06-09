@@ -196,6 +196,12 @@ class MetaTags
             unset($this->links[$index]);
         }
 
+        foreach($this->links as $key => $link){
+            if ($link['rel'] === $rel) {
+                unset($this->links[$key]);
+            }
+        }
+
         $this->links[] = [
             'rel' => $rel,
             'href' => $href,
