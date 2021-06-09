@@ -192,10 +192,6 @@ class MetaTags
      */
     public function replaceLink(string $rel, string $href, array $attributes): self
     {
-        if ($index = array_search($rel, $this->links)) {
-            unset($this->links[$index]);
-        }
-
         foreach($this->links as $key => $link){
             if ($link['rel'] === $rel) {
                 unset($this->links[$key]);
