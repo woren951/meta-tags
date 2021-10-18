@@ -122,29 +122,42 @@ class MetaTags
      * @param int|null $width
      * @param int|null $heigth
      * @param string|null $type
+     * @param array|null $providers
      * @return $this
      */
     public function image(
         string $value,
         int $width = null,
         int $heigth = null,
-        string $type = null
+        string $type = null,
+        array $providers = []
     ): self {
-        $this->og('image', $value);
-
-        if ($width) {
-            $this->og('image:width', $width);
+        if (empty($providers)) {
+            $providers = [
+                'og',
+                'twitter',
+            ];
         }
 
-        if ($heigth) {
-            $this->og('image:heigth', $heigth);
+        if (in_array('og', $providers)) {
+            $this->og('image', $value);
+
+            if ($width) {
+                $this->og('image:width', $width);
+            }
+
+            if ($heigth) {
+                $this->og('image:heigth', $heigth);
+            }
+
+            if ($type) {
+                $this->og('image:type', $type);
+            }
         }
 
-        if ($type) {
-            $this->og('image:type', $type);
+        if (in_array('twitter', $providers)) {
+            $this->twitter('image', $value);
         }
-
-        $this->twitter('image', $value);
 
         return $this;
     }
