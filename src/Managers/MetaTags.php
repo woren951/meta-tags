@@ -299,7 +299,7 @@ class MetaTags
 
         foreach ($this->og as $key => $value) {
             $attributes = array_merge(
-                [ 'name' => $key ],
+                [ 'property' => $key ],
                 $value['attributes'] ?? []
             );
 
