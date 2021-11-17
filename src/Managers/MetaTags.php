@@ -199,17 +199,28 @@ class MetaTags
 
     /**
      * @param string $rel
-     * @param string $href
-     * @param array $attributes
-     * @return $this
+     * @return self
      */
-    public function replaceLink(string $rel, string $href, array $attributes): self
+    public function removeLink(string $rel): self
     {
         foreach($this->links as $key => $link){
             if ($link['rel'] === $rel) {
                 unset($this->links[$key]);
             }
         }
+
+        return $this;
+    }
+
+    /**
+     * @param string $rel
+     * @param string $href
+     * @param array $attributes
+     * @return $this
+     */
+    public function replaceLink(string $rel, string $href, array $attributes): self
+    {
+        $this->removeLink($rel);
 
         $this->links[] = [
             'rel' => $rel,
@@ -272,7 +283,7 @@ class MetaTags
      */
     public function render(): string
     {
-        $meta = '';
+        $meta = [];
 
         foreach ($this->meta as $key => $value) {
             $attributes = [];
@@ -282,7 +293,7 @@ class MetaTags
                 $value['attributes'] ?? []
             );
 
-            $meta .= $this->createTag($value['tag'], $attributes, $value['content'] ?? null) . "\n";
+            $meta[] = $this->createTag($value['tag'], $attributes, $value['content'] ?? null) . "\n";
         }
 
         foreach ($this->links as $key => $value) {
@@ -294,7 +305,7 @@ class MetaTags
                 $value['attributes'] ?? []
             );
 
-            $meta .= $this->createTag('link', $attributes, null) . "\n";
+            $meta[] = $this->createTag('link', $attributes, null) . "\n";
         }
 
         foreach ($this->og as $key => $value) {
@@ -303,7 +314,7 @@ class MetaTags
                 $value['attributes'] ?? []
             );
 
-            $meta .= $this->createTag($value['tag'], $attributes, $value['content'] ?? null) . "\n";
+            $meta[] = $this->createTag($value['tag'], $attributes, $value['content'] ?? null) . "\n";
         }
 
         foreach ($this->twitter as $key => $value) {
@@ -312,16 +323,16 @@ class MetaTags
                 $value['attributes'] ?? []
             );
 
-            $meta .= $this->createTag($value['tag'], $attributes, $value['content'] ?? null) . "\n";
+            $meta[] = $this->createTag($value['tag'], $attributes, $value['content'] ?? null) . "\n";
         }
 
         foreach ($this->jsonLd as $schema) {
             $json = json_encode($schema, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT);
 
-            $meta .= "<script type=\"application/ld+json\">\n{$json}\n</script>";
+            $meta[] = "<script type=\"application/ld+json\">\n{$json}\n</script>";
         }
 
-        return $meta;
+        return implode('', $meta);
     }
 
     /**
