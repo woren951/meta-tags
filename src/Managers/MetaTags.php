@@ -376,6 +376,14 @@ class MetaTags
     }
 
     /**
+     * @return array
+     */
+    public function getLinks(): array
+    {
+        return $this->links;
+    }
+
+    /**
      * @param string $tag
      * @param array|null $attributes
      * @param string|null $content
