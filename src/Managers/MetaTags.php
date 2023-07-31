@@ -120,7 +120,7 @@ class MetaTags
     /**
      * @param string $value
      * @param int|null $width
-     * @param int|null $heigth
+     * @param int|null $height
      * @param string|null $type
      * @param array|null $providers
      * @return $this
@@ -128,7 +128,7 @@ class MetaTags
     public function image(
         string $value,
         int $width = null,
-        int $heigth = null,
+        int $height = null,
         string $type = null,
         array $providers = []
     ): self {
@@ -146,8 +146,8 @@ class MetaTags
                 $this->og('image:width', $width);
             }
 
-            if ($heigth) {
-                $this->og('image:heigth', $heigth);
+            if ($height) {
+                $this->og('image:height', $height);
             }
 
             if ($type) {
