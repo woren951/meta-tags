@@ -393,8 +393,10 @@ class MetaTags
     {
         $element = "<{$tag}";
 
-        foreach ($attributes as $key => $value) {
-            $element .= " {$key}=\"{$this->escapeAll($value)}\"";
+        if ($tag !== 'title') {
+            foreach ($attributes as $key => $value) {
+                $element .= " {$key}=\"{$this->escapeAll($value)}\"";
+            }
         }
 
         if ($content !== null) {
