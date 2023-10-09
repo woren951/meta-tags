@@ -30,6 +30,11 @@ class MetaTags
     protected $jsonLd = [];
 
     /**
+     * @var array
+     */
+    protected $robots = [];
+
+    /**
      * @param string $value
      * @param array|null $providers
      * @return $this
@@ -105,14 +110,16 @@ class MetaTags
     }
 
     /**
-     * @param string $value
+     * @param string|array $value
+     * @param bool $replace
      * @return $this
      */
-    public function robots(string $value): self
+    public function robots(string|array $value, bool $replace = true): self
     {
-        $this->meta('robots', 'meta', [
-            'content' => $value,
-        ]);
+        $this->robots = [
+            ...($replace ? [] : $this->robots),
+            ...(is_array($value) ? $value : [ $value ]),
+        ];
 
         return $this;
     }
@@ -330,6 +337,18 @@ class MetaTags
             $json = json_encode($schema, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT);
 
             $meta[] = "<script type=\"application/ld+json\">\n{$json}\n</script>";
+        }
+
+        if (! empty($this->robots)) {
+            $content = implode(', ', $this->robots);
+
+            $meta[] = $this->createTag(
+                'meta',
+                [
+                    'name' => 'robots',
+                    'content' => $content,
+                ]
+            ) . "\n";
         }
 
         return implode('', $meta);
